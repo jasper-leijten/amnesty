@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rebus Puzzle Game</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="loading-bar.js" defer></script> 
+</head>
+<body>  
+    <div class="explanation" id="text">
+        <p>Solve the rebus to find the hidden message!</p>
+        <p>The moving text on the big screen has to be censored in China. To talk about the subject they
+            use their own language of Emotes. Can you decypher it?</p>
+    </div>
+    <div id="puzzle-container">
+        <img id="puzzle" src="" alt="Rebus Puzzle">
+    </div>
+    <div id="buttons">
+        <input type="text" id="answer" placeholder="Your Answer">
+        <button id="reveal" disabled>TRANSLATE TEXT</button>
+        <button type="button" class="button" id="next" data-progress-text="NEXT" data-complete-text="Next Puzzle">
+            <div class="button__progress"></div>
+            <span class="button__text">NEXT</span>
+        </button>    
+    </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
+
+<script>
+    const socket = io();
+
+    const puzzle = document.getElementById('puzzle');
+    const answerInput = document.getElementById('answer');
+    const revealButton = document.getElementById('reveal');
+    const nextButton = document.getElementById('next');
+
+    // Initial puzzle setup
+    let currentPuzzleIndex = 0;
+    const puzzles = ['puzzle-1.png', 'puzzle-2.png', 'puzzle-3.png', 'puzzle-4.png', 'puzzle-5.png']; // Add more puzzles as needed
+
+    function loadPuzzle() {
+        puzzle.src = `puzzles/${puzzles[currentPuzzleIndex]}`;
+        answerInput.value = '';
+        revealButton.disabled = true;
+        nextButton.disabled = true;
+    }
+
+    loadPuzzle();
+
+    const correctAnswers = ['1', '2', '3', '4', '5']; 
+    // const correctAnswers = ['Xi zedong', 'fearless', 'animal farm', 'shameless', 'slavernij']; 
+
+    answerInput.addEventListener('input', () => {
+        revealButton.disabled = answerInput.value.toLowerCase() !== correctAnswers[currentPuzzleIndex].toLowerCase();
+    });
+
+    revealButton.addEventListener('click', () => {
+            // Emit the "reveal" event to the server when the button is clicked
+            socket.emit('reveal');
+
+            // Animate the progress bar from 0 to 100 over 5 seconds
+            let progress = 0;
+            const interval = 10;
+
+            const progressBarAnimation = setInterval(() => {
+                setButtonProgress(nextButton, progress);
+                progress += 1;
+
+                if (progress > 100) {
+                    clearInterval(progressBarAnimation);
+                    nextButton.disabled = false;
+                }
+            }, 5 * interval);
+        });
+
+    nextButton.addEventListener('click', () => {
+        setButtonProgress(btnUploadFile, 0);
+        currentPuzzleIndex = (currentPuzzleIndex + 1) % puzzles.length;
+        loadPuzzle();
+        // Emit the "next" event to the server when the button is clicked
+        socket.emit('next');
+    });
+</script>
+
+</body>
+</html>

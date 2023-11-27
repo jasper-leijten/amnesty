@@ -1,0 +1,122 @@
+@font-face {
+    font-family: 'AmnestyChina';
+    src: url("/fonts/AMNESTYCHINA.ttf") format('truetype');
+}
+
+body {
+    background-color: #000000; /* Set the background color to dark grey */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+#text {
+    max-width: 500px;
+}
+
+h3,p {
+    -webkit-font-smoothing: antialiased; /* For Chrome and Safari */
+    -moz-osx-font-smoothing: grayscale; /* For Firefox on macOS */
+    text-rendering: optimizeLegibility; /* For improved rendering */
+
+    font-family: 'AmnestyChina', sans-serif;
+    color: #FFFF00;
+    font-size: 40px;
+    letter-spacing: 3px;
+}
+
+#video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#puzzle-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#puzzle {
+    max-width: 400px;
+    max-height: 400px;
+    margin-bottom: 10px;
+}
+
+#buttons {
+    display: flex;
+}
+
+#answer {
+    border: 2px solid #FFFF00; /* Neon color border for the text field */
+    border-radius: 5px; /* Rounded corners */
+    padding: 8px;
+    color: #FFFF00;
+    font-family: 'AmnestyChina', sans-serif;
+    font-size: 26px;
+    letter-spacing: 3px;
+    background-color: transparent; /* Transparent background */
+    margin-right: 10px;
+}
+
+#reveal,
+#next {
+    border: 2px solid #FFFF00; /* Neon color border for the buttons */
+    border-radius: 5px; /* Rounded corners */
+    background-color: transparent; /* Transparent background */
+    color: #FFFF00; /* Neon color text */
+    font-family: 'AmnestyChina', sans-serif;
+    font-size: 26px;
+    letter-spacing: 3px;
+    padding: 8px 16px;
+    cursor: pointer;
+    margin-right: 10px; 
+}
+
+#reveal:disabled,
+#next:disabled {
+    opacity: 0.3; /* Dim the disabled buttons */
+    cursor: not-allowed;
+}
+
+.button {
+    border: none;
+    background: #FFFF00;
+    color: #ffffff;
+    padding: 10px 16px;
+    position: relative;
+    cursor: pointer;
+    
+    font-family: 'AmnestyChina', sans-serif;
+    font-size: 26px;
+    letter-spacing: 3px;
+
+    overflow: hidden;
+    border-radius: 5px;
+    min-width: 125px;
+  }
+  
+  .button__progress {
+    position: absolute;
+    height: 100%;
+    width: 0%;
+    top: 0;
+    left: 0;
+    background: rgba(83, 162, 80, 0.8);
+    transition: width 0.3s;
+  }

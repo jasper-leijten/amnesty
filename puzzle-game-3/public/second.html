@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Second Screen</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="video-container">
+        <video id="video" autoplay loop muted playsinline>
+            <source src="video/video-1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
+    <script src="loading-bar.js" defer></script>
+
+    <script>
+        const socket = io();
+        const videoElement = document.getElementById('video');
+    
+        // Array of video pairs
+        const videoPairs = [
+            ['video/video-1.mp4', 'video/video-2.mp4'],
+            ['video/video-3.mp4', 'video/video-4.mp4'],
+            ['video/video-5.mp4', 'video/video-6.mp4'],
+            ['video/video-7.mp4', 'video/video-8.mp4'],
+            ['video/video-9.mp4', 'video/video-10.mp4']
+        ];
+    
+        let currentPairIndex = 0;
+    
+        function loadCurrentVideoPair() {
+            const [puzzleVideo, answerVideo] = videoPairs[currentPairIndex];
+            changeVideo(videoElement, puzzleVideo);
+        }
+    
+        function changeVideo(element, source) {
+            element.src = source;
+            element.load();
+            element.play();
+        }
+    
+        videoElement.addEventListener('ended', () => {
+            // Reverse playback direction when the video ends
+            videoElement.playbackRate *= -1;
+        });
+    
+        socket.on('reveal_answer', () => {
+            // Change video source when revealing answer
+            const [, answerVideo] = videoPairs[currentPairIndex];
+            changeVideo(videoElement, answerVideo);
+        });
+    
+        socket.on('next_puzzle', () => {
+            currentPairIndex = (currentPairIndex + 1) % videoPairs.length;
+            // Reset the playback rate to normal
+            videoElement.playbackRate = 1;
+            loadCurrentVideoPair();
+        });
+    
+        loadCurrentVideoPair();
+    </script>
+</body>
+</html>
